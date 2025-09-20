@@ -5,6 +5,7 @@ import prod2 from "./assets/img2.jpg";
 import prod3 from "./assets/img3.jpg";
 import prod4 from "./assets/img4.jpg";
 import { MdAddShoppingCart } from "react-icons/md";
+import { ToastContainer, toast } from 'react-toastify';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,11 +55,15 @@ function App() {
 
   const finalizarPedido = () => {
     if (cart.length === 0) {
-      alert("Seu carrinho está vazio!");
+      toast.error("Seu carrinho está vazio!",{
+        theme: "colored",
+      });
       return;
     }
 
-    alert(`Pedido finalizado!\nTotal: R$${total.replace(".", ",")}`);
+    toast.success("Pedido finalizado",{
+      theme: "colored",
+    });
 
     setCart([]);
     setIsModalOpen(false);
@@ -66,6 +71,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer />
       <header className="w-full h-[420px] bg-zinc-900 bg-[url('./assets/bg.png')] bg-cover bg-center">
         <div className="w-full h-full flex flex-col justify-center items-center">
           <img

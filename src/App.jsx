@@ -10,6 +10,8 @@ import { ToastContainer, toast } from 'react-toastify';
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cart, setCart] = useState([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("");
 
   // TODO CARDAPIO DINAMICO
   const produtos = [
@@ -55,18 +57,18 @@ function App() {
 
   const finalizarPedido = () => {
     if (cart.length === 0) {
-      toast.error("Seu carrinho está vazio!",{
+      toast.error("Seu carrinho está vazio!", {
         theme: "colored",
       });
       return;
     }
 
-    toast.success("Pedido finalizado",{
-      theme: "colored",
-    });
+    // toast.success("Pedido finalizado", {
+    //   theme: "colored",
+    // });
 
-    setCart([]);
     setIsModalOpen(false);
+    setIsFormOpen(true)
   };
 
   return (
@@ -158,7 +160,7 @@ function App() {
 
             <div className="flex items-center justify-between mt-4 w-full">
               <button
-                className="cursor-pointer"
+                className="text-red-600 cursor-pointer"
                 onClick={() => setIsModalOpen(false)}
               >
                 Fechar
@@ -167,9 +169,64 @@ function App() {
                 onClick={finalizarPedido}
                 className="bg-green-500 text-white px-4 py-1 rounded cursor-pointer"
               >
-                Finalizar
+                Avançar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {isFormOpen && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[100]">
+          <div className="bg-white p-5 rounded-md min-w-[90%] md:min-w-[60%]">
+            <h2 className="text-center text-2xl font-bold mb-4">Dados do Cliente</h2>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                toast.success("Pedido enviado!", { theme: "colored" });
+                setCart([]);
+                setIsFormOpen(false);
+              }}
+              className="flex flex-col gap-3"
+            >
+              <input
+                type="text"
+                placeholder="Digite seu nome"
+                required
+                className="border p-2 rounded"
+              />
+              <input
+                type="text"
+                placeholder="Digite seu endereço"
+                required
+                className="border p-2 rounded"
+              />
+              <label className="font-bold">Forma de pagamento:</label>
+              <select
+                required
+                className="border p-2 rounded"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              >
+                <option value="">Selecione</option>
+                <option value="dinheiro">Dinheiro</option>
+                <option value="cartao">Cartão de crédito</option>
+                <option value="pix">PIX</option>
+              </select>
+              <p className="font-bold">Total: R${total}</p>
+              <div className="mt-4 flex items-center justify-between">
+                <button className="text-red-600 cursor-pointer" onClick={()=> setIsFormOpen(false)}>
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="bg-green-500 text-white px-4 py-1 rounded cursor-pointer"
+                >
+                  Finalizar Pedido
+                </button>
+              </div>
+
+            </form>
           </div>
         </div>
       )}
